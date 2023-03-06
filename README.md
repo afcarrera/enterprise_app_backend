@@ -106,7 +106,7 @@ El detalle de los endpoint es el siguiente.
 
 [/api/v1/employee](#)
 ### GET BY ID
-[/enterprise/{enterpriseId}](#) 
+[/api/v1/enterprise/{enterpriseId}](#) 
 
 [/api/v1/department/{departmentId}](#) 
 
