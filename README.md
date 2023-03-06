@@ -66,7 +66,7 @@ El detalle de los endpoint es el siguiente.
 }
 ```
 ### PATCH
-[/enterprise/{enterpriseId}](#)   
+[/api/v1/enterprise/{enterpriseId}](#)   
 **Request**
 ```
 {
@@ -75,7 +75,7 @@ El detalle de los endpoint es el siguiente.
     "address" :"CALLE 123"
 }
 ```
-[/department/{departmentId}](#)   
+[/api/v1/department/{departmentId}](#)   
 **Request**
 ```
 {
@@ -85,7 +85,7 @@ El detalle de los endpoint es el siguiente.
     "phone" :"1234567890"    
 }
 ```
-[/employee/{employeeId}](#)   
+[/api/v1/employee/{employeeId}](#)   
 **Request**
 ```
 {
@@ -97,14 +97,14 @@ El detalle de los endpoint es el siguiente.
 }
 ```
 ### GET ALL
-[/enterprise](#)
+[/api/v1/enterprise](#)
 
-[/department](#)
+[/api/v1/department](#)
 
-[/employee](#)
+[/api/v1/employee](#)
 ### GET BY ID
 [/enterprise/{enterpriseId}](#) 
 
-[/department/{departmentId}](#) 
+[/api/v1/department/{departmentId}](#) 
 
-[/employee/{employeeId}](#) 
+[/api/v1/employee/{employeeId}](#) 
