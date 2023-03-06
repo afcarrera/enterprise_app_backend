@@ -15,9 +15,13 @@ Control de empresas.
 ## Instalación
 ***
 Comandos recomendados para instalación en plataformas Windows. 
+Ejemplo de DB_URL: //localhost:3306/sicpa
 ```
 > git clone https://github.com/afcarrera/enterprise_app_backend
 > cd enterprise_app_backend
+> set DB_USER = your_db_user
+> set DB_PASSWORD = your_db_user_password
+> set DB_URL = your_db_url
 > cd database
 > mysql -u root -p <CREATE_DATABASE.sql
 > mysql -u root -p <CREATE_TABLES.sql
@@ -25,7 +29,6 @@ Comandos recomendados para instalación en plataformas Windows.
 > cd enterpriseControl
 > mvnw spring-boot:run 
 ```
-
 ## Uso
 ***
 La aplicación responde a lo planteado por las preguntas de sicpa con sus respectivas validaciones, su documentación se encuentra en [http://localhost:9000/enterprise-control/swagger-ui.html](#)
@@ -66,7 +69,7 @@ El detalle de los endpoint es el siguiente.
 }
 ```
 ### PATCH
-[/enterprise/{enterpriseId}](#)   
+[/api/v1/enterprise/{enterpriseId}](#)   
 **Request**
 ```
 {
@@ -75,7 +78,7 @@ El detalle de los endpoint es el siguiente.
     "address" :"CALLE 123"
 }
 ```
-[/department/{departmentId}](#)   
+[/api/v1/department/{departmentId}](#)   
 **Request**
 ```
 {
@@ -85,7 +88,7 @@ El detalle de los endpoint es el siguiente.
     "phone" :"1234567890"    
 }
 ```
-[/employee/{employeeId}](#)   
+[/api/v1/employee/{employeeId}](#)   
 **Request**
 ```
 {
@@ -97,14 +100,14 @@ El detalle de los endpoint es el siguiente.
 }
 ```
 ### GET ALL
-[/enterprise](#)
+[/api/v1/enterprise](#)
 
-[/department](#)
+[/api/v1/department](#)
 
-[/employee](#)
+[/api/v1/employee](#)
 ### GET BY ID
-[/enterprise/{enterpriseId}](#) 
+[/api/v1/enterprise/{enterpriseId}](#) 
 
-[/department/{departmentId}](#) 
+[/api/v1/department/{departmentId}](#) 
 
-[/employee/{employeeId}](#) 
+[/api/v1/employee/{employeeId}](#) 
