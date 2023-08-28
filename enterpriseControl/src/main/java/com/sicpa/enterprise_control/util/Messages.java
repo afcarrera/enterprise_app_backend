@@ -8,7 +8,8 @@ public class Messages {
         INVALID_PHONE("Invalid phone."),
         INVALID_POSITION("Invalid position."),
         INVALID_ENTERPRISE("Invalid enterprise."),
-        INVALID_AGE("Invalid age.")
+        INVALID_AGE("Invalid age."),
+        OBJECT_IS_UPDATED("There is another update process on the object, please try again later.")
         ;
 
         private final String text;

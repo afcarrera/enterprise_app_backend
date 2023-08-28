@@ -12,13 +12,20 @@ import com.sicpa.enterprise_control.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @RestController
 @RequestMapping("/api/v1/enterprises")
 public class EnterpriseController {
     @Autowired
     private EnterpriseServiceImpl enterpriseServiceImpl;
+
+    @Autowired
+    private Map<String, ConcurrentLinkedQueue<EnterpriseDTO>> map;
 
     @PostMapping
     public ResponseDTO<Object> create(@RequestBody EnterpriseDTO enterpriseDto)
@@ -48,6 +55,17 @@ public class EnterpriseController {
     @PatchMapping("/{idEnterprise}")
     public ResponseDTO<Object> update(@PathVariable("idEnterprise") String id, @RequestBody EnterpriseDTO enterpriseDto)
             throws ResourceNotFoundException, ValidationException {
+        Date d = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss.SSS");
+        System.out.println(" Executing Time for task name - "+id+" = " +ft.format(d));
+        map.computeIfAbsent(id, v -> new ConcurrentLinkedQueue<>()).add(enterpriseDto);
+        EnterpriseDTO firstEnterpriseDto = null;
+        if (map.get(id).stream().findFirst().isPresent()){
+            firstEnterpriseDto = map.get(id).stream().findFirst().get();
+        }
+        if (Objects.isNull(firstEnterpriseDto) || Boolean.FALSE.equals(firstEnterpriseDto.equals(enterpriseDto))){
+            throw new ValidationException(Messages.Errors.OBJECT_IS_UPDATED.toString());
+        }
         EnterpriseDTO previousEnterprise = this.enterpriseServiceImpl.findById(id);
         if (Objects.isNull(previousEnterprise)){
             throw new ResourceNotFoundException(Messages.NotFound.NOT_FOUND_ENTERPRISE.toString());
@@ -65,6 +83,7 @@ public class EnterpriseController {
             previousEnterprise.setModifiedBy(Constants.USER_DEFAULT);
             previousEnterprise.setModifiedDate(Util.getCurrentDate());
         }
+        map.get(id).clear();
         return MappingDTO.getResponse(enterpriseServiceImpl.update(previousEnterprise));
     }
 
