@@ -6,7 +6,7 @@ import com.sicpa.enterprise_control.dto.util.MappingDTO;
 import com.sicpa.enterprise_control.exception.RequiredException;
 import com.sicpa.enterprise_control.exception.ResourceNotFoundException;
 import com.sicpa.enterprise_control.exception.ValidationException;
-import com.sicpa.enterprise_control.service.impl.EmployeeServiceImpl;
+import com.sicpa.enterprise_control.service.IEmployeeService;
 import com.sicpa.enterprise_control.util.Constants;
 import com.sicpa.enterprise_control.util.Messages;
 import com.sicpa.enterprise_control.util.Util;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
     @Autowired
-    private EmployeeServiceImpl employeeServiceImpl;
+    private IEmployeeService iEmployeeService;
 
     @PostMapping
     public ResponseDTO<Object> create(@RequestBody EmployeeDTO employeeDto)
@@ -43,23 +43,23 @@ public class EmployeeController {
         }
         employeeDto.setCreatedDate(Util.getCurrentDate());
         employeeDto.setCreatedBy(Constants.USER_DEFAULT);
-        return MappingDTO.getResponse(employeeServiceImpl.create(employeeDto));
+        return MappingDTO.getResponse(iEmployeeService.create(employeeDto));
     }
 
     @GetMapping
     public ResponseDTO<Object> findAll(){
-        return MappingDTO.getResponse(employeeServiceImpl.findAll());
+        return MappingDTO.getResponse(iEmployeeService.findAll());
     }
 
     @GetMapping("/{idEmployee}")
     public ResponseDTO<Object> findById(@PathVariable("idEmployee") String id){
-        return MappingDTO.getResponse(employeeServiceImpl.findById(id));
+        return MappingDTO.getResponse(iEmployeeService.findById(id));
     }
 
     @PatchMapping("/{idEmployee}")
     public ResponseDTO<Object> update(@PathVariable("idEmployee") String id, @RequestBody EmployeeDTO employeeDto)
             throws ResourceNotFoundException, ValidationException {
-        EmployeeDTO previousEmployee = this.employeeServiceImpl.findById(id);
+        EmployeeDTO previousEmployee = this.iEmployeeService.findById(id);
         if (Objects.isNull(previousEmployee)){
             throw new ResourceNotFoundException(Messages.NotFound.NOT_FOUND_EMPLOYEE.toString());
         }else{
@@ -83,7 +83,7 @@ public class EmployeeController {
             previousEmployee.setModifiedBy(Constants.USER_DEFAULT);
             previousEmployee.setModifiedDate(Util.getCurrentDate());
         }
-        return MappingDTO.getResponse(employeeServiceImpl.update(previousEmployee));
+        return MappingDTO.getResponse(iEmployeeService.update(previousEmployee));
     }
 
     private String validateRequiredEmployee(EmployeeDTO employeeDto){

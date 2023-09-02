@@ -6,7 +6,7 @@ import com.sicpa.enterprise_control.dto.util.MappingDTO;
 import com.sicpa.enterprise_control.exception.RequiredException;
 import com.sicpa.enterprise_control.exception.ResourceNotFoundException;
 import com.sicpa.enterprise_control.exception.ValidationException;
-import com.sicpa.enterprise_control.service.impl.DepartmentServiceImpl;
+import com.sicpa.enterprise_control.service.IDepartmentService;
 import com.sicpa.enterprise_control.util.Constants;
 import com.sicpa.enterprise_control.util.Messages;
 import com.sicpa.enterprise_control.util.Util;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @RequestMapping("/api/v1/departments")
 public class DepartmentController {
     @Autowired
-    private DepartmentServiceImpl departmentServiceImpl;
+    private IDepartmentService iDepartmentService;
 
     @Autowired
     private EnterpriseController enterpriseController;
@@ -38,23 +38,23 @@ public class DepartmentController {
 				Messages.Errors.INVALID_PHONE.toString()));
         departmentDto.setCreatedDate(Util.getCurrentDate());
         departmentDto.setCreatedBy(Constants.USER_DEFAULT);
-        return MappingDTO.getResponse(departmentServiceImpl.create(departmentDto));
+        return MappingDTO.getResponse(iDepartmentService.create(departmentDto));
     }
 
     @GetMapping
     public ResponseDTO<Object> findAll(){
-        return MappingDTO.getResponse(departmentServiceImpl.findAll());
+        return MappingDTO.getResponse(iDepartmentService.findAll());
     }
 
     @GetMapping("/{idDepartment}")
     public ResponseDTO<Object> findById(@PathVariable("idDepartment") String id){
-        return MappingDTO.getResponse(departmentServiceImpl.findById(id));
+        return MappingDTO.getResponse(iDepartmentService.findById(id));
     }
 
     @PatchMapping("/{idDepartment}")
     public ResponseDTO<Object> update(@PathVariable("idDepartment") String id, @RequestBody DepartmentDTO departmentDto)
             throws ResourceNotFoundException, ValidationException {
-        DepartmentDTO previousDepartment = this.departmentServiceImpl.findById(id);
+        DepartmentDTO previousDepartment = this.iDepartmentService.findById(id);
         if (Objects.isNull(previousDepartment)){
             throw new ResourceNotFoundException(Messages.NotFound.NOT_FOUND_DEPARTMENT.toString());
         }else{
@@ -77,7 +77,7 @@ public class DepartmentController {
             previousDepartment.setModifiedBy(Constants.USER_DEFAULT);
             previousDepartment.setModifiedDate(Util.getCurrentDate());
         }
-        return MappingDTO.getResponse(departmentServiceImpl.update(previousDepartment));
+        return MappingDTO.getResponse(iDepartmentService.update(previousDepartment));
     }
 
     private String validateRequiredDepartment(DepartmentDTO departmentDto){

@@ -5,7 +5,7 @@ import com.sicpa.enterprise_control.dto.util.MappingDTO;
 import com.sicpa.enterprise_control.exception.RequiredException;
 import com.sicpa.enterprise_control.exception.ResourceNotFoundException;
 import com.sicpa.enterprise_control.exception.ValidationException;
-import com.sicpa.enterprise_control.service.impl.EnterpriseServiceImpl;
+import com.sicpa.enterprise_control.service.IEnterpriseService;
 import com.sicpa.enterprise_control.util.Constants;
 import com.sicpa.enterprise_control.util.Messages;
 import com.sicpa.enterprise_control.util.Util;
@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
 @RequestMapping("/api/v1/enterprises")
 public class EnterpriseController {
     @Autowired
-    private EnterpriseServiceImpl enterpriseServiceImpl;
+    private IEnterpriseService iEnterpriseService;
 
     @Autowired
     private Map<String, ExecutorService> map;
@@ -42,17 +42,17 @@ public class EnterpriseController {
 				Messages.Errors.INVALID_PHONE.toString()));
         enterpriseDto.setCreatedDate(Util.getCurrentDate());
         enterpriseDto.setCreatedBy(Constants.USER_DEFAULT);
-        return MappingDTO.getResponse(enterpriseServiceImpl.create(enterpriseDto));
+        return MappingDTO.getResponse(iEnterpriseService.create(enterpriseDto));
     }
 
     @GetMapping
     public ResponseDTO<Object> findAll(){
-        return MappingDTO.getResponse(enterpriseServiceImpl.findAll());
+        return MappingDTO.getResponse(iEnterpriseService.findAll());
     }
 
     @GetMapping("/{idEnterprise}")
     public ResponseDTO<Object> findById(@PathVariable("idEnterprise") String id){
-        return MappingDTO.getResponse(enterpriseServiceImpl.findById(id));
+        return MappingDTO.getResponse(iEnterpriseService.findById(id));
     }
 
     @PatchMapping("/{idEnterprise}")
@@ -63,7 +63,7 @@ public class EnterpriseController {
         System.out.println(" Executing Time for task name - "+id+" = " +ft.format(d));
         map.computeIfAbsent(id, v -> Executors.newSingleThreadExecutor());
         Future<EnterpriseDTO> returnedEnterprise = map.get(id).submit(() -> {
-            EnterpriseDTO previousEnterprise = this.enterpriseServiceImpl.findById(id);
+            EnterpriseDTO previousEnterprise = this.iEnterpriseService.findById(id);
             if (Objects.isNull(previousEnterprise)) {
                 throw new ResourceNotFoundException(Messages.NotFound.NOT_FOUND_ENTERPRISE.toString());
             } else {
@@ -84,7 +84,7 @@ public class EnterpriseController {
                 previousEnterprise.setModifiedBy(Constants.USER_DEFAULT);
                 previousEnterprise.setModifiedDate(Util.getCurrentDate());
             }
-            return enterpriseServiceImpl.update(previousEnterprise);
+            return iEnterpriseService.update(previousEnterprise);
         });
         return MappingDTO.getResponse(returnedEnterprise.get());
     }
