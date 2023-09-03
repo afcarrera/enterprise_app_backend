@@ -14,12 +14,11 @@ import com.sicpa.enterprise_control.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 @Service
 public class EnterpriseServiceImpl implements IEnterpriseService {
@@ -28,6 +27,24 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
 
     @Autowired
     private Map<String, ExecutorService> map;
+
+    @Autowired
+    private Map<String, Date> dateMap;
+
+    @PostConstruct
+    private void init() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(() -> {
+            Date date = new Date();
+            long millisecondsByDay = TimeUnit.DAYS.toMillis(1);
+            this.dateMap.forEach((key, value) -> {
+                if (date.getTime()-value.getTime() >= millisecondsByDay){
+                    this.map.remove(key);
+                    this.dateMap.remove(key);
+                }
+            });
+        }, BigInteger.ZERO.intValue(), BigInteger.ONE.intValue(), TimeUnit.MINUTES);
+    }
 
     @Override
     public EnterpriseDTO create(EnterpriseDTO enterpriseDTO) throws ValidationException {
@@ -53,6 +70,7 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
         SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss.SSS");
         System.out.println(" Executing Time for task name - "+id+" = " +ft.format(d));
         map.computeIfAbsent(id, v -> Executors.newSingleThreadExecutor());
+        dateMap.computeIfAbsent(id, v -> Util.getCurrentDate());
         Future<EnterpriseDTO> returnedEnterprise = map.get(id).submit(() -> {
             EnterpriseDTO previousEnterprise = this.findById(id);
             if (Objects.isNull(previousEnterprise)) {
