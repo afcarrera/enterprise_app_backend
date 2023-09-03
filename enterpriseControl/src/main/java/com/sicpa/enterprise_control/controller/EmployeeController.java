@@ -12,8 +12,6 @@ import com.sicpa.enterprise_control.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 @RestController
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
