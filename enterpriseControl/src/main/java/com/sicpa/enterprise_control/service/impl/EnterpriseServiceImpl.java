@@ -43,7 +43,7 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
                     this.dateMap.remove(key);
                 }
             });
-        }, BigInteger.ZERO.intValue(), BigInteger.ONE.intValue(), TimeUnit.MINUTES);
+        }, BigInteger.ZERO.intValue(), BigInteger.ONE.intValue(), TimeUnit.DAYS);
     }
 
     @Override
